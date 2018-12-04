@@ -15,8 +15,8 @@ Level::Level(vector<vector<BlockType>> blocks, int columns, int rows)
 
 shared_ptr<Level> Level::loadLevel(string filename)
 {
-	filename += createMaze(10, 10);
-	//filename += createMaze(0, 0);
+	//filename += createMaze(10, 10);
+	filename += createMaze(0, 0);
 
 	int exitFlag[2] = { -1, -1 };
 	int enterFlag[2] = { -1, -1 };
