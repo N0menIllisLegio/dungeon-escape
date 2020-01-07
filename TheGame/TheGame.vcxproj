@@ -127,6 +127,7 @@
     <ClInclude Include="Game.h" />
     <ClInclude Include="Graphics.h" />
     <ClInclude Include="Level.h" />
+    <ClInclude Include="MazeGenerator.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
@@ -135,15 +136,11 @@
     <ClCompile Include="Graphics.cpp" />
     <ClCompile Include="Level.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MazeGenerator.cpp" />
     <ClCompile Include="Player.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Resource.rc" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\MazeGenerator\MazeGenerator.vcxproj">
-      <Project>{80723f88-5318-47f2-b8da-d9d319914b54}</Project>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Image Include="resources\icon.ico" />

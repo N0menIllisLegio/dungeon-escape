@@ -1,13 +1,13 @@
 #ifndef LEVEL_H
 #define LEVEL_H
 
-#include<Windows.h>
+#include <Windows.h>
 #include <string>
 #include <vector>
 #include <fstream>
 
 #include "BlockType.h"
-#include "stdafx.h"
+#include "MazeGenerator.h"
 
 using namespace std;
 
