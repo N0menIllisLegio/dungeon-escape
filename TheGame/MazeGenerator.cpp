@@ -197,9 +197,10 @@ void randomPoint(bool part) {
 	maze[location[1]][location[0]][1] = true;
 }
 
-bool createMazeFile()
+string createMazeFile(const string directory)
 {
-	ofstream myfile("levels/GeneratedLevel.txt");
+	string path = directory + "/GeneratedLevel.txt";
+	ofstream myfile(path);
 	const char* startEnd = "se";
 	int startEndPtr = 0;
 
@@ -231,12 +232,11 @@ bool createMazeFile()
 	}
 	else
 	{
-		return false;
+		return NULL;
 	}
 
-	return true;
+	return path;
 }
-
 
 void clearVars()
 {
@@ -244,7 +244,7 @@ void clearVars()
 	maze.clear();
 }
 
-const char* createMaze(int width, int height)
+const string createMaze(int width, int height, const string directory)
 {
 	srand((unsigned int)time(nullptr));
 
@@ -271,13 +271,8 @@ const char* createMaze(int width, int height)
 	randomPoint(false);
 	randomPoint(true);
 	generateMaze();
-	bool result = createMazeFile();
+	string result = createMazeFile(directory);
 	clearVars();
 
-	if (result)
-	{
-		return "GeneratedLevel.txt";
-	}
-
-	return "DefaultLevel.txt";
+	return result;
 }

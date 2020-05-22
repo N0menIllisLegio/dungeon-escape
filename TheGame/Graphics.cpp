@@ -2,13 +2,25 @@
 
 Graphics::Graphics(HWND window, shared_ptr<Level> currentLevel)
 {
-	LoadBitmapFromFile("sprites/wall.bmp", BlockType::Unwalkable);
-	LoadBitmapFromFile("sprites/floor.bmp", BlockType::Walkable);
-	LoadBitmapFromFile("sprites/start.bmp", BlockType::Start);
-	LoadBitmapFromFile("sprites/end.bmp", BlockType::Finish);
-	LoadBitmapFromFile("sprites/player.bmp", BlockType::Trouper);
-	LoadBitmapFromFile("sprites/hud.bmp", BlockType::Hud);
-	LoadBitmapFromFile("sprites/fog.bmp", BlockType::Fog);
+	bool spritesLoaded = true;
+	spritesLoaded &= LoadBitmapFromFile("sprites/wall.bmp", BlockType::Unwalkable);
+	spritesLoaded &= LoadBitmapFromFile("sprites/floor.bmp", BlockType::Walkable);
+	spritesLoaded &= LoadBitmapFromFile("sprites/start.bmp", BlockType::Start);
+	spritesLoaded &= LoadBitmapFromFile("sprites/end.bmp", BlockType::Finish);
+	spritesLoaded &= LoadBitmapFromFile("sprites/player.bmp", BlockType::Trouper);
+	spritesLoaded &= LoadBitmapFromFile("sprites/hud.bmp", BlockType::Hud);
+	spritesLoaded &= LoadBitmapFromFile("sprites/fog.bmp", BlockType::Fog);
+
+	if (!spritesLoaded)
+	{
+		string finishText = "Sprites are missing!\n";
+		finishText += "In root directry of the game must be a folder 'sprites' with next sprites:\n";
+		finishText += "wall.bmp, floor.bmp, start.bmp, end.bmp, player.bmp, hud.bmp, fog.bmp";
+		if (MessageBox(window, finishText.c_str(), "Error!", MB_OK | MB_ICONERROR) == IDOK)
+		{
+			exit(EXIT_FAILURE);
+		}
+	}
 
 	this->window = window;
 

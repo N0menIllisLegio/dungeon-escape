@@ -13,16 +13,15 @@ Level::Level(vector<vector<BlockType>> blocks, int columns, int rows)
 	}
 }
 
-shared_ptr<Level> Level::loadLevel(string filename)
+shared_ptr<Level> Level::loadLevel(const string directory)
 {
-	//filename += createMaze(10, 10);
-	filename += createMaze(0, 0);
+	const string levelPath = createMaze(0, 0, directory);
 
 	int exitFlag[2] = { -1, -1 };
 	int enterFlag[2] = { -1, -1 };
 	int tempCols = 0;
 	
-	ifstream fileStream(filename);
+	ifstream fileStream(levelPath);
 	string line;
 
 	int cols = 0;
@@ -107,4 +106,24 @@ bool Level::checkLevel(HWND hwnd, shared_ptr<Level> level)
 	}
 	
 	return true;
+}
+
+bool dirExists(const std::string& dirName_in)
+{
+	DWORD ftyp = GetFileAttributesA(dirName_in.c_str());
+	if (ftyp == INVALID_FILE_ATTRIBUTES)
+		return false;
+
+	if (ftyp & FILE_ATTRIBUTE_DIRECTORY)
+		return true;
+
+	return false;
+}
+
+void Level::initializeLevelDirectory(const string directory)
+{
+	if (!dirExists(directory))
+	{
+		CreateDirectory(directory.c_str(), NULL);
+	}
 }

@@ -3,6 +3,7 @@
 Game::Game(HWND window, shared_ptr<Level> level, int FOV)
 {
 	currentLevel = level;
+
 	player = new Player(0, 0, BlockType::Trouper, true);
 	gfx = new Graphics(window, currentLevel);
 	this->FOV = FOV;

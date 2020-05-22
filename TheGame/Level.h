@@ -17,8 +17,9 @@ class Level
 {
 public:
     Level(vector<vector<BlockType>> blocks, int width, int height);
-	static shared_ptr<Level> loadLevel(string filename);
+	static shared_ptr<Level> loadLevel(const string directory);
 	static bool checkLevel(HWND hwnd, shared_ptr<Level> level);
+	static void initializeLevelDirectory(const string directory);
 
 	vector<vector<BlockType>> blocks;
 	vector<vector<BlockType>> fogMap;

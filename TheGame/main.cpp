@@ -4,16 +4,17 @@
 #include "Level.h"
 #include "resource.h"
 
-#define LEVELFILE "levels/"
-
 using namespace std;
 
 Game *game;
 
 void CreateNewGame(HWND hwnd)
 {
-	shared_ptr<Level> level = Level::loadLevel(LEVELFILE);
+	string levelDirectory = "levels";
 
+	Level::initializeLevelDirectory(levelDirectory);
+	shared_ptr<Level> level = Level::loadLevel(levelDirectory);
+	
 	if (!Level::checkLevel(hwnd, level))
 	{
 		exit(-1);
@@ -56,9 +57,10 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	case WM_PAINT:
 		game->DisplayLevel();
 		break;
+	case WM_DESTROY:
     case WM_CLOSE:
         PostQuitMessage(0);
-        return 0;
+		return 0;
     }
 
     return DefWindowProc(hwnd, msg, wParam, lParam);
@@ -77,19 +79,30 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     RegisterClass(&wc);
 
 	HWND hwnd = CreateWindow("DungeonClass", "Dungeon Escape", WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX, 0, 0,
-		150, 150, NULL, NULL, hInstance, NULL);
-	
+		250, 250, NULL, NULL, hInstance, NULL);
+
 	SendMessage(hwnd, WM_SETICON, ICON_BIG, (LPARAM)hIcon);
 	DestroyIcon(hIcon);
 	CreateNewGame(hwnd);
+	
 	ShowWindow(hwnd, nCmdShow);
 
-	while (GetMessage(&msg, hwnd, 0, 0))
+	BOOL bRet;
+
+	while ((bRet = GetMessage(&msg, hwnd, 0, 0)) != 0)
 	{
-		TranslateMessage(&msg);
-		DispatchMessage(&msg);
-		if (game->isWin())
-			game->Start();
+		if (bRet == -1)
+		{
+			MessageBox(hwnd, "Ooops somthing gone wrong...", "Error!", MB_OK | MB_ICONERROR);
+			break;
+		}
+		else
+		{
+			TranslateMessage(&msg);
+			DispatchMessage(&msg);
+			if (game->isWin())
+				game->Start();
+		}
 	}
 
 	delete game;

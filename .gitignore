@@ -332,7 +332,7 @@ ASALocalRun/
 
 # Local History for Visual Studio
 .localhistory/
-TheGame/sprites/.DS_Store
-TheGame/.DS_Store
-MazeGenerator/.DS_Store
+
+
 .DS_Store
+**/levels/
