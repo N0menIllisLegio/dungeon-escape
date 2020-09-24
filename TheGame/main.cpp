@@ -1,12 +1,18 @@
 #include <Windows.h>
+#include <thread>
 
 #include "Game.h"
 #include "Level.h"
 #include "resource.h"
+#include "Serial.h"
+
+#define COM_PORT 5
+#define BAUD_RATE 9600
 
 using namespace std;
 
 Game *game;
+BOOL listeningPort = true;
 
 void CreateNewGame(HWND hwnd)
 {
@@ -27,6 +33,51 @@ void CreateNewGame(HWND hwnd)
 
 	game = new Game(hwnd, level, 2);
 	game->Start();
+}
+
+void ListenCOM(HWND *hwnd)
+{
+	CSerial port;
+
+    if (port.Open(COM_PORT, BAUD_RATE))
+    {
+        MessageBox(*hwnd, "Port is open!", "Message", MB_OK | MB_ICONINFORMATION);
+        char* lpBuffer = new char[500];
+
+        while(listeningPort)
+        {
+            if (port.ReadDataWaiting() > 0)
+            {
+                int nBytesRead = port.ReadData(lpBuffer, 500);
+				std::string command = std::string(lpBuffer).substr(0, nBytesRead);
+
+				switch (command[0])
+				{
+				case 'U':
+					PostMessage(*hwnd, WM_KEYDOWN, 0x57, 0);
+					break;
+				case 'D':
+					PostMessage(*hwnd, WM_KEYDOWN, 0x53, 0);
+					break;
+				case 'R':
+					PostMessage(*hwnd, WM_KEYDOWN, 0x44, 0);
+					break;
+				case 'L':
+					PostMessage(*hwnd, WM_KEYDOWN, 0x41, 0);
+					break;
+				case 'Q':
+					PostMessage(*hwnd, WM_CLOSE, 0, 0);
+					break;
+				default:
+					break;
+				}
+            }
+        }
+    }
+    else
+    {
+		MessageBox(*hwnd, "Port is not open!", "Warning!", MB_OK | MB_ICONERROR);
+    }
 }
 
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) 
@@ -57,9 +108,8 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	case WM_PAINT:
 		game->DisplayLevel();
 		break;
-	case WM_DESTROY:
     case WM_CLOSE:
-        PostQuitMessage(0);
+        DestroyWindow(hwnd);
 		return 0;
     }
 
@@ -88,6 +138,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	ShowWindow(hwnd, nCmdShow);
 
 	BOOL bRet;
+	std::thread listenCOM(ListenCOM, &hwnd);
 
 	while ((bRet = GetMessage(&msg, hwnd, 0, 0)) != 0)
 	{
@@ -105,7 +156,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		}
 	}
 
+	listeningPort = false;
+	listenCOM.join();
+
 	delete game;
 
     return 0;
 }
+
+
