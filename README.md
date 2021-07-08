@@ -24,4 +24,4 @@ Rogue-like game. The goal is to find a way out of the labyrinth with the smalles
 |L|Move LEFT|
 |Q|Close game|
 
-Was implemented for [this](https://github.com/N0menIllisLegio/joystick).
+Was implemented for [this](https://github.com/N0menIllisLegio/NUCLEO-F401RE-Funduino-Joystick-Shield).
